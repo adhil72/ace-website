@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Users, Award, Briefcase, ImageIcon } from 'lucide-react'
+import { Users, Award, Briefcase, ImageIcon, Book, LucidePersonStanding } from 'lucide-react'
 
 export default function AdminIndex() {
   const adminPages = [
@@ -10,7 +10,8 @@ export default function AdminIndex() {
     { title: 'Placements', description: 'Track and update placement records', icon: Briefcase, href: '/admin/placements' },
     { title: 'Gallery Management', description: 'Upload and manage gallery photos', icon: ImageIcon, href: '/admin/gallery' },
     { title: 'Events', description: 'Manage department events', icon: ImageIcon, href: '/admin/event' },
-    { title: 'Execom', description: 'Manage executive committee members', icon: ImageIcon, href: '/admin/execom' },
+    { title: 'Execom', description: 'Manage executive committee members', icon: LucidePersonStanding, href: '/admin/execom' },
+    { title: 'Results', description: 'Manage semester results', icon: Book, href:"/admin/result" }
   ]
 
   return (

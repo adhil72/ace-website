@@ -6,12 +6,14 @@ const CarouselGallery = ({ imageUrls }: any) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const prevSlide = () => {
+        if (imageUrls.length === 0) return;
         setCurrentIndex((prevIndex) =>
             prevIndex === 0 ? imageUrls.length - 1 : prevIndex - 1
         );
     };
 
     const nextSlide = () => {
+        if (imageUrls.length === 0) return;
         setCurrentIndex((prevIndex) =>
             prevIndex === imageUrls.length - 1 ? 0 : prevIndex + 1
         );
@@ -27,7 +29,7 @@ const CarouselGallery = ({ imageUrls }: any) => {
         <div className="relative w-full h-full max-w-4xl mx-auto">
             <div className="overflow-hidden rounded-lg h-full">
                 <img
-                    src={imageUrls[currentIndex]}
+                    src={imageUrls[currentIndex]?.url}
                     alt={`Slide ${currentIndex}`}
                     className="w-full h-full object-cover transition-transform duration-500 ease-in-out"
                 />

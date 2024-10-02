@@ -9,8 +9,8 @@ import { Label } from "@radix-ui/react-label"
 import { GraduationCap, LogIn } from 'lucide-react'
 
 export default function AdminLogin({ setLoggedIn }: any) {
-    const [username, setUsername] = useState('acegec')
-    const [password, setPassword] = useState('#3zF9329880')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const router = useRouter()
 

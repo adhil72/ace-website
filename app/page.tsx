@@ -34,6 +34,8 @@ export default function Home() {
       })
 
     fetch('/api/gallery').then(res => res.json()).then(data => {
+      console.log(data);
+      
       setGallaryItems(data)
     })
 

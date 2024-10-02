@@ -1,8 +1,8 @@
 "use client";
 
 import FullScreenPhoto from "@/components/feature/FullScreenPhoto"
-import { useState } from "react";
-import { TypePlacements, TypeSemResult } from "../api/type";
+import { useEffect, useState } from "react";
+import { TypeGallary, TypePlacements, TypeSemResult } from "../api/type";
 
 // const s1Topers = [
 //   {
@@ -137,6 +137,13 @@ export default function Achievements() {
 
   const [results, setResults] = useState<TypeSemResult[]>([])
   const [placements, setPlacements] = useState<TypePlacements[]>([])
+  const [gallery, setGallery] = useState<TypeGallary[]>([])
+
+  useEffect(() => {
+    fetch("/api/result").then((res) => res.json()).then((data) => { setResults(data) })
+    fetch("/api/placement").then((res) => res.json()).then((data) => { setPlacements(data) })
+    fetch("/api/gallery").then((res) => res.json()).then((data) => { setGallery(data) })
+  }, [])
 
   return (
     (<div className="flex-1 px-4 md:px-32">
@@ -149,7 +156,7 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              results.filter((r)=>r.batch==='s1').map((i) => {
+              results.filter((r) => r.batch === 's1').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
                     src={i.imageUrl}
@@ -174,7 +181,7 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              results.filter((r)=>r.batch==='s3').map((i) => {
+              results.filter((r) => r.batch === 's3').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
                     src={i.imageUrl}
@@ -199,7 +206,7 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              results.filter((r)=>r.batch==='s5').map((i) => {
+              results.filter((r) => r.batch === 's5').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
                     src={i.imageUrl}
@@ -224,7 +231,7 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              results.filter((r)=>r.batch==='s7').map((i) => {
+              results.filter((r) => r.batch === 's7').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
                     src={i.imageUrl}
@@ -252,7 +259,7 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {
-              placements.map(({company,id,imageUrl,name,packageLpa,year}) => {
+              placements.map(({ company, id, imageUrl, name, packageLpa, year }) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
                     src={imageUrl}
@@ -280,9 +287,9 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {
-              Array(24).fill('').map((_, i) => {
-                return <div className="w-full h-[180px]">
-                  <FullScreenPhoto src={`/g/${i + 1}.jpg`} alt="Student" />
+              gallery.map((item, i) => {
+                return <div className="w-full h-[180px] transition-all duration-300">
+                  <FullScreenPhoto src={item.url} alt="Student" />
                 </div>
               })
             }

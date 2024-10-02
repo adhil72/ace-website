@@ -1,78 +1,80 @@
 "use client";
 
 import FullScreenPhoto from "@/components/feature/FullScreenPhoto"
+import { useState } from "react";
+import { TypePlacements, TypeSemResult } from "../api/type";
 
-const s1Topers = [
-  {
-    name: "Akhil Sebastian",
-    sgpa: 9.56,
-    img: "/s1_1.jpeg"
-  },
-  {
-    name: "Alok Krishna K P",
-    sgpa: 9.47,
-    img: "/s1_2.jpeg"
-  },
-  {
-    name: "Anushree K",
-    sgpa: 9.29,
-    img: "/s1_3.jpeg"
-  }
-]
+// const s1Topers = [
+//   {
+//     name: "Akhil Sebastian",
+//     sgpa: 9.56,
+//     img: "/s1_1.jpeg"
+//   },
+//   {
+//     name: "Alok Krishna K P",
+//     sgpa: 9.47,
+//     img: "/s1_2.jpeg"
+//   },
+//   {
+//     name: "Anushree K",
+//     sgpa: 9.29,
+//     img: "/s1_3.jpeg"
+//   }
+// ]
 
-const s3Topers = [
-  {
-    name: "Anshidha",
-    sgpa: 9.73,
-    img: "/s3_1.jpeg"
-  },
-  {
-    name: "ABHIRAM k",
-    sgpa: 9.55,
-    img: "/s3_2.jpeg"
-  },
-  {
-    name: "Hariprasad",
-    sgpa: 9.18,
-    img: "/s3_3.jpeg"
-  }
-]
+// const s3Topers = [
+//   {
+//     name: "Anshidha",
+//     sgpa: 9.73,
+//     img: "/s3_1.jpeg"
+//   },
+//   {
+//     name: "ABHIRAM k",
+//     sgpa: 9.55,
+//     img: "/s3_2.jpeg"
+//   },
+//   {
+//     name: "Hariprasad",
+//     sgpa: 9.18,
+//     img: "/s3_3.jpeg"
+//   }
+// ]
 
-const s5Topers = [
-  {
-    name: "Charchika B Sreejith",
-    sgpa: 9.13,
-    img: "/s5_1.jpeg"
-  },
-  {
-    name: "Anusha C",
-    sgpa: 9.09,
-    img: "/s5_2.jpeg"
-  },
-  {
-    name: "Rehna Das C",
-    sgpa: 8.67,
-    img: "/s5_3.jpeg"
-  }
-]
+// const s5Topers = [
+//   {
+//     name: "Charchika B Sreejith",
+//     sgpa: 9.13,
+//     img: "/s5_1.jpeg"
+//   },
+//   {
+//     name: "Anusha C",
+//     sgpa: 9.09,
+//     img: "/s5_2.jpeg"
+//   },
+//   {
+//     name: "Rehna Das C",
+//     sgpa: 8.67,
+//     img: "/s5_3.jpeg"
+//   }
+// ]
 
-const s7Topers = [
-  {
-    name: "Diya Baiju N",
-    sgpa: 9.8,
-    img: "/s7_1.jpeg"
-  },
-  {
-    name: "Brice Joshy",
-    sgpa: 9.23,
-    img: "/s7_2.jpeg"
-  },
-  {
-    name: "Berli kurian",
-    sgpa: 9.17,
-    img: "/s7_3.jpeg"
-  }
-]
+// const s7Topers = [
+//   {
+//     name: "Diya Baiju N",
+//     sgpa: 9.8,
+//     img: "/s7_1.jpeg"
+//   },
+//   {
+//     name: "Brice Joshy",
+//     sgpa: 9.23,
+//     img: "/s7_2.jpeg"
+//   },
+//   {
+//     name: "Berli kurian",
+//     sgpa: 9.17,
+//     img: "/s7_3.jpeg"
+//   }
+// ]
 
 const placements = [
   {
@@ -132,6 +134,10 @@ const placements = [
 ]
 
 export default function Achievements() {
+
+  const [results, setResults] = useState<TypeSemResult[]>([])
+  const [placements, setPlacements] = useState<TypePlacements[]>([])
+
   return (
     (<div className="flex-1 px-4 md:px-32">
       <section className="bg-background py-12 md:py-16 lg:py-20">
@@ -143,10 +149,10 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              s1Topers.map((i) => {
+              results.filter((r)=>r.batch==='s1').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
-                    src={i.img}
+                    src={i.imageUrl}
                     width={200}
                     height={200}
                     alt="Student"
@@ -168,10 +174,10 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              s3Topers.map((i) => {
+              results.filter((r)=>r.batch==='s3').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
-                    src={i.img}
+                    src={i.imageUrl}
                     width={200}
                     height={200}
                     alt="Student"
@@ -193,10 +199,10 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              s5Topers.map((i) => {
+              results.filter((r)=>r.batch==='s5').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
-                    src={i.img}
+                    src={i.imageUrl}
                     width={200}
                     height={200}
                     alt="Student"
@@ -218,10 +224,10 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
             {
-              s7Topers.map((i) => {
+              results.filter((r)=>r.batch==='s7').map((i) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
-                    src={i.img}
+                    src={i.imageUrl}
                     width={200}
                     height={200}
                     alt="Student"
@@ -234,9 +240,7 @@ export default function Achievements() {
                 </div>
               })
             }
-
           </div>
-
         </div>
       </section>
       <section id="placements" className="bg-muted rounded-xl p-12 md:py-16 lg:py-20">
@@ -248,10 +252,10 @@ export default function Achievements() {
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {
-              placements.map(({ name, company, img, lpa }) => {
+              placements.map(({company,id,imageUrl,name,packageLpa,year}) => {
                 return <div className="rounded-lg border bg-card p-4 shadow-sm">
                   <img
-                    src={img}
+                    src={imageUrl}
                     width={200}
                     height={200}
                     alt="Student"
@@ -260,7 +264,7 @@ export default function Achievements() {
                   <div className="space-y-1 text-center">
                     <h3 className="text-lg font-medium">{name}</h3>
                     <p className="text-sm text-muted-foreground">{company}</p>
-                    <p className="text-lg font-semibold">{lpa} LPA</p>
+                    <p className="text-lg font-semibold">{packageLpa} LPA</p>
                   </div>
                 </div>
               })

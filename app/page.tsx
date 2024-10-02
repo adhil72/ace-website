@@ -1,108 +1,47 @@
+"use client";
+
 import CarouselGallery from "@/components/feature/Carousel";
 import Link from "next/link"
+import { useEffect, useState } from "react";
+import { TypeEvent, TypeExecom, TypeGallary, TypeGateHolder, TypePlacements } from "./api/type";
 
-const gallaryItems = Array(24).fill('').map((_, i) => `/g/${i + 1}.jpg`)
-
-const gateQualifiers = [
-  {
-    name: "Ashiq MA",
-    rank: "AIR 2953",
-    steram: "DA",
-    img: "/gate/1.jpg"
-  },
-  {
-    name: "Sreelakshmi PP",
-    rank: "AIR 7004",
-    steram: "CS",
-    img: "/gate/2.jpg"
-  },
-  {
-    name: "Aswhin MK",
-    rank: "AIR 6610",
-    steram: "CS",
-    img: ""
-  }
-]
-
-const placements = [
-  {
-    name: "Aiswarya Rajesh",
-    lpa: 4.5,
-    company: "Q spiders",
-    img: "/1.jpg"
-  },
-  {
-    name: "Afra Musthafa",
-    lpa: 4.5,
-    company: "Q spiders",
-    img: "/2.jpg"
-  },
-  {
-    name: "Abhinav p",
-    lpa: 4.5,
-    company: "Q spiders",
-    img: "/3.jpg"
-  },
-  {
-    name: "Clement Mathew",
-    lpa: 4,
-    company: "Q Burst",
-    img: "/4.jpg"
-  },
-  {
-    name: "Janvi rajeev",
-    lpa: 4.5,
-    company: "Q spiders",
-    img: "/5.jpg"
-  },
-  {
-    name: "Mohammed Niyas",
-    lpa: 4,
-    company: "Q spiders",
-    img: "/6.jpg"
-  },
-  {
-    name: "Malavika T",
-    lpa: 4,
-    company: "Q spiders",
-    img: "/7.jpg"
-  },
-  {
-    name: "Sabeeh Sharof Perincheeri",
-    lpa: 4.5,
-    company: "Q spiders",
-    img: "/8.jpg"
-  },
-  {
-    name: "Shamila PK",
-    lpa: 4,
-    company: "TATA ELXSI",
-    img: "/9.jpg"
-  }
-]
-
-const aceEvents = [
-  {
-    name: "TechFest 2023",
-    description: "Annual technical symposium featuring workshops, coding competitions, and guest lectures.",
-    date: "October 15-17, 2023",
-    image: "/1.jpg"
-  },
-  {
-    name: "CodeCamp",
-    description: "Intensive 48-hour coding bootcamp for students to enhance their programming skills.",
-    date: "March 5-7, 2024",
-    image: "/2.jpg"
-  },
-  {
-    name: "AI Workshop",
-    description: "Hands-on workshop on Artificial Intelligence and Machine Learning fundamentals.",
-    date: "January 20, 2024",
-    image: "/3.jpg"
-  }
-];
 
 export default function Home() {
+
+  const [gateQualifiers, setGateQualifiers] = useState<TypeGateHolder[]>([])
+  const [placements, setPlacements] = useState<TypePlacements[]>([])
+  const [aceEvents, setAceEvents] = useState<TypeEvent[]>([])
+  const [gallaryItems, setGallaryItems] = useState<TypeGallary[]>([])
+  const [execom, setExecom] = useState<TypeExecom[]>([])
+
+  useEffect(() => {
+    fetch('/api/gate')
+      .then(res => res.json())
+      .then(data => {
+        setGateQualifiers(data)
+      })
+
+    fetch('/api/placement')
+      .then(res => res.json())
+      .then(data => {
+        setPlacements(data)
+      })
+
+    fetch('/api/event')
+      .then(res => res.json())
+      .then(data => {
+        setAceEvents(data)
+      })
+
+    fetch('/api/gallery').then(res => res.json()).then(data => {
+      setGallaryItems(data)
+    })
+
+    fetch('/api/execom').then(res => res.json()).then(data => {
+      setExecom(data)
+    })
+  }, [])
+
   return <div className="w-full h-screen overflow-y-auto overflow-x-hidden">
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 justify-center md:justify-between lg:px-6 h-14 flex items-center">
@@ -176,9 +115,11 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <img
-                src="/c.jpg"
-                alt="Hero"
+              <video
+                autoPlay
+                muted
+                loop
+                src="/hero.mp4"
                 className="w-[100%] h-[230px] md:h-[400px] object-cover rounded-lg" />
             </div>
           </div>
@@ -199,39 +140,19 @@ export default function Home() {
             </div>
             <div
               className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-              <center className="grid gap-1 ">
-                <img
-                  src="/gsh.jpg"
-                  width="200"
-                  height="200"
-                  alt="Faculty"
-                  className="mx-auto aspect-square overflow-hidden rounded-full object-cover" />
-                <h3 className="text-lg font-bold">Dr. Gilesh MP</h3>
-                <p className="text-sm text-muted-foreground">Head of department</p>
-                <p className="text-sm text-muted-foreground">President</p>
-              </center>
-              <center className="grid gap-1">
-                <img
-                  src="/dnr.jpeg"
-                  width="200"
-                  height="200"
-                  alt="Faculty"
-                  className="mx-auto aspect-square overflow-hidden rounded-full object-cover" />
-                <h3 className="text-lg font-bold">Dr. Dhanya P Raj</h3>
-                <p className="text-sm text-muted-foreground">Professor</p>
-                <p className="text-sm text-muted-foreground">Vice President</p>
-              </center>
-              <center className="grid gap-1">
-                <img
-                  src="/lr.jpeg"
-                  width="200"
-                  height="200"
-                  alt="Faculty"
-                  className="mx-auto aspect-square overflow-hidden rounded-full object-cover" />
-                <h3 className="text-lg font-bold">Lena ramachandhran</h3>
-                <p className="text-sm text-muted-foreground">CSE student respresentative</p>
-                <p className="text-sm text-muted-foreground">Secretary</p>
-              </center>
+              {
+                execom.map((i) => <center className="grid gap-1 ">
+                  <img
+                    src="/gsh.jpg"
+                    width="200"
+                    height="200"
+                    alt="Faculty"
+                    className="mx-auto aspect-square overflow-hidden rounded-full object-cover" />
+                  <h3 className="text-lg font-bold">{i.name}</h3>
+                  <p className="text-sm text-muted-foreground">{i.title}</p>
+                  <p className="text-sm text-muted-foreground">{i.role}</p>
+                </center>)
+              }
             </div>
           </div>
         </section>
@@ -254,13 +175,13 @@ export default function Home() {
               {
                 placements.slice(0, 3).map((i) => <center className="grid gap-1 ">
                   <img
-                    src={i.img}
+                    src={i.imageUrl}
                     width="200"
                     height="200"
                     alt="Faculty"
                     className="mx-auto aspect-square overflow-hidden rounded-full object-cover" />
                   <h3 className="text-lg font-bold">{i.name}</h3>
-                  <p className="text-sm text-muted-foreground">Placed at {i.company} for {i.lpa} LPA</p>
+                  <p className="text-sm text-muted-foreground">Placed at {i.company} for {i.packageLpa} LPA</p>
                 </center>)
               }
             </div>
@@ -293,14 +214,14 @@ export default function Home() {
               {
                 gateQualifiers.map((i) => <center className="grid gap-1 ">
                   <img
-                    src={i.img !== "" ? i.img : "/placeholder.svg"}
+                    src={i.imageUrl !== "" ? i.imageUrl : "/placeholder.svg"}
                     width="200"
                     height="200"
                     alt="Faculty"
                     className="mx-auto aspect-square overflow-hidden rounded-full object-cover" />
                   <h3 className="text-lg font-bold">{i.name}</h3>
                   <p className="text-sm font-semibold">{i.rank}</p>
-                  <p className="text-sm text-muted-foreground">{i.steram}</p>
+                  <p className="text-sm text-muted-foreground">{i.subject}</p>
                 </center>
                 )
               }
@@ -363,13 +284,13 @@ export default function Home() {
               {aceEvents.map((event, index) => (
                 <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105">
                   <img
-                    src={event.image}
-                    alt={event.name}
+                    src={event.imageUrl}
+                    alt={event.title}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
-                    <h3 className="text-lg font-bold text-gray-800">{event.name}</h3>
-                    <p className="text-sm text-gray-600 mt-2">{event.description}</p>
+                    <h3 className="text-lg font-bold text-gray-800">{event.title}</h3>
+                    <p className="text-sm text-gray-600 mt-2">{event.desc}</p>
                     <p className="text-sm font-semibold text-blue-600 mt-2">{event.date}</p>
                   </div>
                 </div>

@@ -40,7 +40,7 @@ export default function PlacementManagement() {
       id: '',
       company,
       name,
-      package: packageLpa,
+      packageLpa,
       year,
       imageUrl: previewUrl,
     }
@@ -196,7 +196,7 @@ export default function PlacementManagement() {
                   <h3 className="font-bold">{placement.name}</h3>
                   <p className="text-sm text-gray-500">
                     {placement.company} <br />
-                    {placement.package} <br />
+                    {placement.packageLpa} <br />
                     {placement.year}
                   </p>
                 </div>

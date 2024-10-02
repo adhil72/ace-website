@@ -16,7 +16,7 @@ export interface TypePlacements {
     id:string;
     name: string;
     company: string;
-    package: string;
+    packageLpa: string;
     year: string;
     imageUrl: string;
 }

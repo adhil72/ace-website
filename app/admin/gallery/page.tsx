@@ -1,32 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@radix-ui/react-label"
 import { Card } from "@/components/ui/card"
 import { Upload, Search, Trash2 } from "lucide-react"
+import { TypeGallary } from '../../api/type'
 
-// Mock data for demonstration purposes
-const initialPhotos = [
-  { id: 1, name: 'CSE Lab', url: '/placeholder.svg?height=100&width=100' },
-  { id: 2, name: 'Students Working', url: '/placeholder.svg?height=100&width=100' },
-  { id: 3, name: 'Department Building', url: '/placeholder.svg?height=100&width=100' },
-]
 
 export default function AdminGalleryManagement() {
   const [name, setName] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [photos, setPhotos] = useState(initialPhotos)
+  const [photos, setPhotos] = useState<TypeGallary[]>([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [uploadProgress, setUploadProgress] = useState(0)
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
+    setUploadProgress(0)
     if (selectedFile) {
-      setFile(selectedFile)
-      setPreviewUrl(URL.createObjectURL(selectedFile))
+      const response = await fetch(
+        `/api/upload?filename=${selectedFile.name}`,
+        {
+          method: 'POST',
+          body: selectedFile,
+        },
+      );
+      setUploadProgress(100)
+      setTimeout(async () => {
+        setUploadProgress(0)
+        if (response.ok) {
+          const data = await response.json();
+          setPreviewUrl(data.url)
+        } else {
+          setError('Failed to upload file');
+        }
+      }, 1000);
     }
   }
 
@@ -39,18 +51,28 @@ export default function AdminGalleryManagement() {
       return
     }
 
-    if (!file) {
-      setError('Please select a photo to upload.')
+    if (!previewUrl) {
+      setError('Please wait for the photo to upload.')
       return
     }
 
-    // TODO: Implement the actual file upload logic here
-    // This would typically involve sending the file and name to your server
-    console.log('Uploading:', { name, file })
+    const data: TypeGallary = {
+      id: '',
+      title: name,
+      url: previewUrl
+    }
 
-    // Simulate adding the new photo to the list
-    const newPhoto = { id: Date.now(), name, url: URL.createObjectURL(file) }
-    setPhotos([newPhoto, ...photos])
+    fetch('/api/gallery', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(() => {
+      fetchPhotos()
+    })
+
+
 
     // Reset form after successful upload
     setName('')
@@ -60,15 +82,32 @@ export default function AdminGalleryManagement() {
     alert('Photo uploaded successfully!')
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this photo?')) {
-      setPhotos(photos.filter(photo => photo.id !== id))
+      fetch(`/api/gallery?id=${id}`, {
+        method: 'DELETE',
+      }).then(() => {
+        fetchPhotos()
+      })
     }
   }
 
   const filteredPhotos = photos.filter(photo =>
-    photo.name.toLowerCase().includes(searchTerm.toLowerCase())
+    photo.title.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const fetchPhotos = async () => {
+    const response = await fetch('/api/gallery')
+    if (response.ok) {
+      const data = await response.json()
+      console.log(data);
+      setPhotos(data)
+    }
+  }
+
+  useEffect(() => {
+    fetchPhotos()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -144,9 +183,9 @@ export default function AdminGalleryManagement() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {filteredPhotos.map((photo) => (
               <div key={photo.id} className="relative group">
-                <img src={photo.url} alt={photo.name} className="w-full h-40 object-cover rounded-md" />
+                <img src={photo.url} alt={photo.title} className="w-full h-40 object-cover rounded-md" />
                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                  <p className="text-white text-center">{photo.name}</p>
+                  <p className="text-white text-center">{photo.title}</p>
                   <Button
                     variant="destructive"
                     size="icon"

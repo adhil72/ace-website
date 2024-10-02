@@ -18,6 +18,7 @@ export interface TypePlacements {
     company: string;
     package: string;
     year: string;
+    imageUrl: string;
 }
 
 export interface TypeSemResult {
@@ -50,4 +51,5 @@ export interface TypeGateHolder {
     name: string;
     rank: string;
     imageUrl: string;
+    subject: string;
 }

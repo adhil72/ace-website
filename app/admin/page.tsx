@@ -9,7 +9,7 @@ export default function AdminIndex() {
     { title: 'GATE Toppers', description: 'Manage GATE topper information', icon: Award, href: '/admin/gate' },
     { title: 'Placements', description: 'Track and update placement records', icon: Briefcase, href: '/admin/placements' },
     { title: 'Gallery Management', description: 'Upload and manage gallery photos', icon: ImageIcon, href: '/admin/gallery' },
-    { title: 'Events', description: 'Manage department events', icon: ImageIcon, href: '/admin/events' },
+    { title: 'Events', description: 'Manage department events', icon: ImageIcon, href: '/admin/event' },
     { title: 'Execom', description: 'Manage executive committee members', icon: ImageIcon, href: '/admin/execom' },
   ]
 

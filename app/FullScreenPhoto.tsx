@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FullScreenPhoto = ({ src, alt }) => {
+const FullScreenPhoto = ({ src, alt }:any) => {
     const [isFullScreen, setIsFullScreen] = useState(false);
 
     const toggleFullScreen = () => {

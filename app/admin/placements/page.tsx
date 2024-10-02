@@ -1,25 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@radix-ui/react-label"
 import { Card } from "@/components/ui/card"
 import { Search, Trash2, Upload } from "lucide-react"
+import { TypePlacements } from '../../api/type'
 
-const initialFaculties = [
-  { id: 1, name: 'Dr. John Doe', subject: 'Data Structures', imageUrl: '/placeholder.svg?height=100&width=100' },
-  { id: 2, name: 'Prof. Jane Smith', subject: 'Algorithms', imageUrl: '/placeholder.svg?height=100&width=100' },
-  { id: 3, name: 'Dr. Mike Johnson', subject: 'Database Management', imageUrl: '/placeholder.svg?height=100&width=100' },
-]
-
-export default function FacultyManagement() {
+export default function PlacementManagement() {
   const [name, setName] = useState('')
-  const [subject, setSubject] = useState('')
+  const [company, setCompany] = useState('')
+  const [packageLpa, setPackage] = useState('')
+  const [year, setYear] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [faculties, setFaculties] = useState(initialFaculties)
+  const [placements, setPlacements] = useState<TypePlacements[]>([])
   const [searchTerm, setSearchTerm] = useState('')
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,42 +31,65 @@ export default function FacultyManagement() {
     e.preventDefault()
     setError(null)
 
-    if (!name.trim() || !subject.trim() || !file) {
+    if (!name.trim() || !company.trim() || !packageLpa.trim() || !year.trim() || !previewUrl) {
       setError('Please fill in all fields and upload an image.')
       return
     }
 
-    const newFaculty = { 
-      id: Date.now(), 
-      name, 
-      subject,
-      imageUrl: URL.createObjectURL(file)
+    const data: TypePlacements = {
+      id: '',
+      company,
+      name,
+      package: packageLpa,
+      year,
+      imageUrl: previewUrl,
     }
-    setFaculties([newFaculty, ...faculties])
 
-    setName('')
-    setSubject('')
+    fetch('/api/placement', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(() => fetchPlacementMembers())
+
+
     setFile(null)
     setPreviewUrl(null)
-    alert('Faculty member added successfully!')
+    setName('')
+    setCompany('')
+    setPackage('')
+    setYear('')
+
+    alert('Placement member added successfully!')
   }
 
-  const handleDelete = (id: number) => {
-    if (window.confirm('Are you sure you want to delete this faculty member?')) {
-      setFaculties(faculties.filter(faculty => faculty.id !== id))
+  const handleDelete = (id: string) => {
+    if (window.confirm('Are you sure you want to delete this placement member?')) {
+      fetch(`/api/placement?id=${id}`, { method: 'DELETE' }).then(() => { fetchPlacementMembers() })
     }
   }
 
-  const filteredFaculties = faculties.filter(faculty =>
-    faculty.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    faculty.subject.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPlacements = placements.filter(placement =>
+    placement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    placement.company.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  const fetchPlacementMembers = async () => {
+    const response = await fetch('/api/placement')
+    const data = await response.json()
+    setPlacements(data)
+  }
+
+  useEffect(() => {
+    fetchPlacementMembers()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <Card className="p-6 mb-8">
-          <h1 className="text-2xl font-bold mb-6 text-center">Add Faculty Member</h1>
+          <h1 className="text-2xl font-bold mb-6 text-center">Add Placement Member</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="name">Name</Label>
@@ -78,19 +98,41 @@ export default function FacultyManagement() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Enter faculty name"
+                placeholder="Enter name"
               />
             </div>
             <div>
-              <Label htmlFor="subject">Subject</Label>
+              <Label htmlFor="company">Company</Label>
               <Input
-                id="subject"
+                id="company"
                 type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="Enter subject"
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Enter company name"
               />
             </div>
+            <div>
+              <Label htmlFor="package">Package</Label>
+              <Input
+                id="package"
+                type="text"
+                value={packageLpa}
+                onChange={(e) => setPackage(e.target.value)}
+                placeholder="Enter package in LPA"
+              />
+
+            </div>
+            <div>
+              <Label htmlFor="year">Year</Label>
+              <Input
+                id="year"
+                type="text"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                placeholder="Enter year"
+              />
+            </div>
+
             <div>
               <Label htmlFor="photo">Photo</Label>
               <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
@@ -125,15 +167,15 @@ export default function FacultyManagement() {
             )}
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <Button type="submit" className="w-full">
-              Add Faculty Member
+              Add Placement Member
             </Button>
           </form>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">Manage Faculty Members</h2>
+          <h2 className="text-xl font-bold mb-4">Manage Placement Members</h2>
           <div className="mb-4">
-            <Label htmlFor="search">Search Faculty</Label>
+            <Label htmlFor="search">Search Placement</Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
@@ -147,17 +189,21 @@ export default function FacultyManagement() {
             </div>
           </div>
           <div className="space-y-4">
-            {filteredFaculties.map((faculty) => (
-              <Card key={faculty.id} className="p-4 flex items-center space-x-4">
-                <img src={faculty.imageUrl} alt={faculty.name} className="w-16 h-16 rounded-full object-cover" />
+            {filteredPlacements.map((placement) => (
+              <Card key={placement.id} className="p-4 flex items-center space-x-4">
+                <img src={placement.imageUrl} alt={placement.name} className="w-16 h-16 rounded-full object-cover" />
                 <div className="flex-grow">
-                  <h3 className="font-bold">{faculty.name}</h3>
-                  <p className="text-sm text-gray-500">{faculty.subject}</p>
+                  <h3 className="font-bold">{placement.name}</h3>
+                  <p className="text-sm text-gray-500">
+                    {placement.company} <br />
+                    {placement.package} <br />
+                    {placement.year}
+                  </p>
                 </div>
                 <Button
                   variant="destructive"
                   size="icon"
-                  onClick={() => handleDelete(faculty.id)}
+                  onClick={() => handleDelete(placement.id)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
